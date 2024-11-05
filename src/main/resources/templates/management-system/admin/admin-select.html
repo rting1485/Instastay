@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>attraction-select</title>
+<link rel="stylesheet" th:href="@{/management-system/common/css/index.css}">
+<link rel="stylesheet" th:href="@{/management-system/booking/css/booking.css}">
+</head>
+<body>
+	<div class="container">
+		<div th:replace="~{/management-system/common/sidebar}"></div>
+		<div class="main-content">
+			<div th:replace="~{/management-system/common/navbar}"></div>
+			<form class="form" action="../select">
+				<div class="form-group">
+					<label for="adminId">管理員編號</label> <input type="text" id="adminId"
+						name="adminId">
+				</div>
+				<div class="form-group">
+					<label for="adminAccount">管理員帳號</label> <input type="text"
+						id="adminAccount" name="adminAccount">
+				</div>
+				<div class="form-group">
+					<label for="adminName">管理員姓名</label> <input type="text"
+						id="adminName" name="adminName">
+				</div>
+				<div class="form-group">
+					<label for="adminMail">管理員信箱</label> <input type="email"
+						id="adminMail" name="adminMail">
+				</div>
+				<div class="form-group">
+					<label for="hiredate">到職日</label> <input type="date" id="hiredate"
+						name="hiredate">
+				</div>
+				<div class="form-group">
+					<label for="adminStatus">管理員狀態</label> <select id="adminStatus"
+						name="adminStatus">
+						<option value="1" >在職</option>
+						<option value="0" >離職</option>
+					</select>
+				</div>
+				 <div class="form-group">
+		            <button type="submit" style="background-color: #6c63ff;">查詢</button>
+		            <button type="button" class="cancel">取消</button>
+		        </div>
+		    </form>
+		</div>
+	</div>
+	<script th:src="@{/management-system/common/js/taiwan_districts.js}"></script>
+	<script th:src="@{/management-system/booking/js/booking.js}"></script>
+	<script>
+			const selectCity = document.getElementById("select-city");
+		
+		{
+			let option = document.createElement("option");
+			option.setAttribute('disabled', true);
+	        option.setAttribute('selected', true);
+			option.textContent = "請選擇縣市";
+			selectCity.appendChild(option);
+		}
+		
+		data.forEach(location => {
+			let optionCity = document.createElement("option");
+			optionCity.textContent = location.name;
+			selectCity.appendChild(optionCity);
+		});
+		
+	</script>
+</body>
+</html>

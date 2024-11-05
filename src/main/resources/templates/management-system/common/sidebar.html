@@ -1,0 +1,19 @@
+<aside class="sidebar">
+    <div class="profile">
+        <!-- 使用管理員的頭像 -->
+        <img th:src="@{/management/admin/image/{id}(id=${session.admin.adminId})}" alt="頭像" class="profile-img" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"/>
+        
+        
+        <h3 th:text="${session.admin.adminName}">Admin Name</h3>
+        <p>管理員</p>
+    </div>
+        
+        
+    <ul id="navList">
+        <li><a th:href="@{/management/admin}" data-page="admin-management">管理員列表</a></li>
+        <li><a th:href="@{/management/user}" data-page="member-management">會員管理</a></li>
+        <li><a th:href="@{/management/roomtype}" data-page="booking-management">訂房管理</a></li>
+        <li><a th:href="@{/management/attraction}" data-page="attraction-management">景點管理</a></li>
+        <li><a th:href="@{/management/product}" data-page="shopping-management">商城管理</a></li>
+    </ul>
+</aside>

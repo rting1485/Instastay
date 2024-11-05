@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>packagetour-create</title>
+<link rel="stylesheet" th:href="@{/management-system/common/css/index.css}">
+<link rel="stylesheet" th:href="@{/management-system/booking/css/booking.css}">
+<style>
+    #attractions {
+        height: 300px;
+        width: 100%;
+        overflow-y: auto; 
+    }
+</style>
+</head>
+<body>
+	<div class="container">
+		<div th:replace="~{/management-system/common/sidebar}"></div>
+		<div class="main-content">
+			<div th:replace="~{/management-system/common/navbar}"></div>
+			<form class="form" action="../create" method="post" enctype="multipart/form-data">
+		        <div class="form-group">
+		            <label for="name">行程名稱</label>
+		            <input type="text" id="name" name="packageTourName" placeholder="輸入內容" required>
+		        </div>
+		
+		        <div class="form-group">
+		            <label for="address">價錢</label>
+		            <input type="text" id="price" name="packageTourPrice" placeholder="輸入內容" required>
+		        </div>
+
+                <div class="form-group">
+                    <label for="attractions">選擇景點</label>
+                    <select id="attractions" name="attractionIds" multiple required>
+                        <option th:each="attraction : ${allAttractions}" 
+                                th:value="${attraction.attractionId}" 
+                                th:text="${attraction.attractionName}">
+                        </option>
+                    </select>
+                </div>
+
+		        <div class="form-group">
+        			<label for="description">行程介紹</label>
+        			<textarea id="description" name="packageTourDescription" placeholder="輸入內容" rows="8" style="width: 100%;"></textarea>
+    			</div>
+    			
+    			<div class="form-group">
+					<label>上傳圖片</label>
+					<div class="upload-container">
+					    <label for="file-upload" class="custom-file-upload">
+					    <!-- 上傳圖示 -->
+					      <i class="fas fa-cloud-upload-alt"></i> 
+					      選擇檔案
+					    </label>
+					    <input id="file-upload" name="imageFile" type="file" accept=".jpg, .png">
+					    <p id="file-name" class="file-name">尚未選擇檔案</p>
+					    <p class="upload-instruction">可上傳JPG, PNG</p>
+					</div>
+				</div>
+		
+		        <div class="form-group">
+		        	<button type="button" id="quickFill" style="background-color: #4CAF50; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; margin-bottom: 10px; width: 100%;">一鍵輸入</button>
+		            <button type="submit" class="submit" id="submit">新增</button>
+		            <button type="button" class="cancel">取消</button>
+		        </div>
+		    </form>
+		</div>
+	</div>
+	<script th:src="@{/management-system/booking/js/form.js}"></script>
+	<script th:src="@{/management-system/booking/js/booking.js}"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+    		const fileUpload = document.getElementById('file-upload');
+    		const fileName = document.getElementById('file-name');
+    
+    		fileUpload.addEventListener('change', function() {
+        		if (this.files && this.files[0]) {
+            		fileName.textContent = this.files[0].name;
+        		} else {
+            		fileName.textContent = '尚未選擇檔案';
+        		}
+    		});
+		});
+		
+		document.getElementById('quickFill').addEventListener('click', function() {
+		
+	    document.getElementById('name').value = '台南之旅';
+	    document.getElementById('price').value = '1000';
+	    document.getElementById('description').value = '台南之旅從安平古堡開始，這裡是台灣歷史的縮影，古堡矗立於海邊，讓人可以欣賞到壯麗的海景與悠久的歷史故事。接著前往奇美博物館，這座結合藝術與自然的博物館展示了豐富的西方藝術作品和古典樂器，讓你沉浸在藝術的氛圍中，並探索自然歷史的奧秘。最後，結束這一天的行程在台南的夜市，品嚐當地小吃，如牛肉湯和擔仔麵，感受熱鬧的夜市氛圍，為你的台南之旅劃上完美的句點。';
+	    
+	    const attractionsSelect = document.getElementById('attractions');
+	    const options = attractionsSelect.options;
+	    for(let option of options) {
+	        if(option.text.includes('奇美博物館') || 
+	           option.text.includes('安平古堡')) {
+	            option.selected = true;
+	        }
+	    }
+	});
+	</script>
+</body>
+</html>

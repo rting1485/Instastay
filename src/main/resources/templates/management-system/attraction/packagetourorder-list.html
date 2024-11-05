@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>packagetourorder-list</title>
+	<link rel="stylesheet" th:href="@{/management-system/common/css/index.css}">
+</head>
+<body>
+	<div class="container">
+		<div th:replace="~{/management-system/common/sidebar}"></div>
+		<div class="main-content">
+			<div th:replace="~{/management-system/common/navbar}"></div>
+			<section class="main-list">
+				<!-- 搜索欄 -->
+				<div class="search-bar">
+					<input type="text" id="search-input" placeholder="搜索...">
+					<button id="search-btn">進階搜索</button>
+					<div class="pagination">
+						<button id="prev-page">上一頁</button>
+						<input type="number" id="page-input" th:value="${page.pageable.pageNumber}+1" min="1">
+						/ <span id="total-pages" th:text="${page.totalPages == 0 ? 1 : page.totalPages}"></span>
+						<button id="next-page">下一頁</button>
+					</div>
+					<div class="attr-order-by">
+						<select class="attr-select-order-by" id="select-order-by">
+							<option value="orderId" th:selected="orderId == ${packageTourOrderDTO.attrOrderBy}">訂單編號
+							</option>
+							<option value="orderStatus" th:selected="orderStatus == ${packageTourOrderDTO.attrOrderBy}">
+								訂單狀態</option>
+							<option value="orderDateTime"
+								th:selected="orderDateTime == ${packageTourOrderDTO.attrOrderBy}">訂單建立時間</option>
+						</select>
+						<select class="attr-select-order-by" id="select-sort">
+							<option value="false" th:selected="${packageTourOrderDTO.selectedSort}">升冪</option>
+							<option value="true" th:selected="${packageTourOrderDTO.selectedSort}">降冪</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="content-area-pages">
+					<button class="content-area-page" data-url="/booking/management/attraction/analysis">景點儀錶板</button>
+					<button class="content-area-page" data-url="/booking/management/attraction">景點</button>
+					<button class="content-area-page" data-url="/booking/management/packageTour">套裝行程</button>
+					<button class="content-area-page" data-url="/booking/management/packageTourOrder"
+						style="height: 50px;">訂單</button>
+				</div>
+				<!-- 管理頁面內容 -->
+				<section id="content" class="content-area">
+					<!-- 這裡是管理頁面的動態內容 -->
+					<ul class="item-list">
+						<li th:each="packageTourOrderDTO : ${page.content}" class="list-item"
+							th:data-current-list-id="${packageTourOrderDTO.orderId}">
+							<div class="item-content">
+								<span class="item-title" th:text="'訂單' + ${packageTourOrderDTO.orderId}"></span>
+								<div class="listInfo-group">
+									<span class="item-info" style="color: darkred">使用者編號</span>
+									<span th:text="${packageTourOrderDTO.userId}"></span>
+									<span style="color: #e3e3e373"> ┃ </span>
+									<span class="item-info" style="color: darkred">套裝行程名稱</span>
+									<span th:text="${packageTourOrderDTO.packageTourName}"></span>
+									<span style="color: #e3e3e373"> ┃ </span>
+									<span class="item-info" style="color: darkred">訂單狀態</span>
+									<span th:switch="${packageTourOrderDTO.orderStatus}">
+										<span th:case="1">未付款</span>
+										<span th:case="2">已付款</span>
+										<span th:case="*" th:text="${packageTourOrderDTO.orderStatus}"></span>
+									</span>
+									<span style="color: #e3e3e373"> ┃ </span>
+									<span class="item-info" style="color: darkred">訂單建立時間</span>
+									<span
+										th:text="${#temporals.format(packageTourOrderDTO.orderDateTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+									<span style="color: #e3e3e373"> ┃ </span>
+									<span class="item-info" style="color: darkred">訂單價格</span>
+									<span th:text="${packageTourOrderDTO.orderPrice}"></span>
+									<span style="color: #e3e3e373"> ┃ </span>
+									<span class="item-info" style="color: darkred">旅遊日期</span>
+									<span th:text="${packageTourOrderDTO.travelDate}"></span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<script th:inline="javascript">
+					var requestParameters = [[${ requestParameters }]] || {};
+					var page = [[${ page }]];
+					var totalPages = page.totalPages;
+					console.log(totalPages);
+					console.log(requestParameters);
+				</script>
+			</section>
+		</div>
+	</div>
+	<script th:src="@{/management-system/common/js/index.js}"></script>
+</body>
+</html>

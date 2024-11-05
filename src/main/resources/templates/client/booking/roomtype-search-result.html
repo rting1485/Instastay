@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <title>roomtype search result</title>
+
+  <style>
+    html, body {
+      height: 100% !important;
+    }
+
+    /* 默認情況下隱藏遮罩層 */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      /* 半透明暗色效果 */
+      backdrop-filter: blur(5px);
+      /* 模糊效果 */
+      z-index: 998;
+      /* 高於其他元素但低於下拉選單 */
+      display: none;
+      /* 初始狀態隱藏 */
+    }
+
+    #date {
+      label {
+        cursor: pointer;
+      }
+
+      input {
+        cursor: pointer;
+      }
+    }
+
+    .border-box {
+      box-sizing: border-box !important;
+    }
+
+    .border-radius-22px {
+      border-radius: 22px;
+    }
+
+    .border-bottom-dashed {
+      border-bottom: 1px dashed black !important;
+    }
+
+    .border-bottom-gray {
+      border-bottom: 1px solid #ccc !important;
+    }
+
+    .border-bottom-gray-2 {
+      border-bottom: 2px solid #ccc !important;
+    }
+
+    .max-w-90 {
+      max-width: 90%;
+    }
+
+    .w-90 {
+      width: 90%;
+    }
+
+    .w-80 {
+      width: 80%;
+    }
+
+    .w-70 {
+      width: 70%;
+    }
+
+    .w-35 {
+      width: 35%;
+    }
+
+    .w-30 {
+      width: 30%;
+    }
+
+    .w-20 {
+      width: 20%;
+    }
+
+    .w-15 {
+      width: 15%;
+    }
+
+    .max-width-1200px {
+      max-width: 1200px;
+    }
+
+    .w-240px {
+      width: 240px;
+    }
+
+    .w-100px {
+      width: 100px;
+    }
+
+    .w-80px {
+      width: 80px;
+    }
+
+    .w-40px {
+      width: 40px;
+    }
+    
+    .h-20 {
+      height: 20%;
+    }
+
+    .h-80 {
+      height: 80%;
+    }
+
+    .h-12d5px {
+      height: 12.5px;
+    }
+
+    .h-25px {
+      height: 25px;
+    }
+
+    .h-30px {
+      height: 30px;
+    }
+    
+    .h-40px {
+      height: 40px;
+    }
+
+    .h-50px {
+      height: 50px;
+    }
+
+    .h-60px {
+      height: 60px;
+    }
+
+    .h-70px {
+      height: 70px;
+    }
+
+    .h-80px {
+      height: 80px;
+    }
+
+    .h-190px {
+      height: 190px;
+    }
+
+    .font-size-12px {
+      font-size: 12px;
+    }
+
+    .font-size-25px {
+      font-size: 25px;
+    }
+
+    .border-left-gray {
+      border-left: 1px solid #ccc;
+    }
+
+    /* 取消默認的外框 */
+    .form-control {
+      border: none !important;         /* 移除边框 */
+      box-shadow: none !important;     /* 移除阴影 */
+    }
+
+    /* 調整輸入下拉框的位置 */
+    .drop-menu-search {
+      transform: translate(0, 66px) !important; /* X軸和Y軸的位移調整 */
+    }
+
+    /* 調整輸入下拉框的位置 */
+    .drop-people-number-search {
+      transform: translate(0, 66px) !important;
+    }
+
+    .footer-bgc {
+      background-color: rgb(42, 42, 46);
+    }
+
+    .flex-grow-2 {
+      flex-grow: 2;
+    }
+
+    .flex-grow-3 {
+      flex-grow: 3;
+    }
+
+    .flex-grow-4 {
+      flex-grow: 4;
+    }
+
+    .outline-0 {
+      outline: none;
+    }
+
+    .outline-1 {
+      outline: 1px solid black;
+    }
+
+    .card {
+      cursor: pointer;
+      transition: box-shadow 0.2s ease; /* 添加動畫過渡效果 */
+    }
+
+    .card:hover {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 3px 20px rgba(95, 95, 95, 0.147); /* hover時的陰影效果 */
+    }
+
+    .card-bgc {
+      background-color: #f5f8ff;
+    }
+
+    .card-bgc:hover {
+      background-color: white;
+    }
+
+    .cursor-pointer {
+      cursor: pointer;
+    }
+
+    #banner {
+      width: 100%;
+    }
+
+    #search-room {
+      position: relative;
+      z-index: 999;
+    }
+
+    #search {
+      cursor: pointer;
+
+      label {
+        cursor: pointer
+      }
+
+      input {
+        cursor: pointer;
+      }
+    }
+
+    .customer-blue-active {
+      background-color: #5392f9 !important;
+
+      & > a {
+        color: white !important;
+      }
+    }
+	
+	.aspect-radio-5-4 {
+		aspect-ratio: 5/4;
+	}
+
+    /* 專屬於某個標籤的特定class */
+    .theme-instastay {
+      background-color: #20274d;
+    }
+
+    .room-detail-largeimg-radius {
+      border-radius: 22px 0.375rem 0.375rem 22px;
+    }
+
+    .room-detail-littleimg-radius1 {
+      border-radius: 0.375rem 22px 0.375rem 0.375rem;
+    }
+
+    .room-detail-littleimg-radius2 {
+      border-radius: 0.375rem 0.375rem 22px 0.375rem;
+    }
+
+    .w-search-input {
+      width: calc(171.428571428% + 8px);
+    }
+    .w-search-date-input {
+      width: calc(50% + 16px)
+    }
+
+    .search-btn-bgc {
+      background-color: #5392f9;
+      transition: .2s;
+    }
+
+    .search-btn-bgc:hover {
+      background-color: #5393f9ba;
+    }
+
+    .search-key-bgc {
+      background-color: #eff4fc !important;
+    }
+
+    .customer-col-md-3 {
+      flex: 0 0 auto;
+      width: calc(25% - 1rem);
+    }
+
+    .custom-box-shadow {
+      box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.2);
+    }
+    
+    .tag-color {
+    	color: #5e6b82;
+    }
+
+    .range-slider {
+        position: relative;
+        width: 100%;
+    }
+    .range-slider .form-range {
+        position: absolute;
+        pointer-events: none;
+        width: 100%;
+    }
+    /* 確保滑塊按鈕可以點擊 */
+    .range-slider .form-range::-webkit-slider-thumb {
+        pointer-events: auto;
+        position: relative;
+        z-index: 100;
+    }
+    .range-slider .form-range::-moz-range-thumb {
+        pointer-events: auto;
+        position: relative;
+        z-index: 100;
+    }
+    /* 移除第二個滑塊的背景軌道 */
+    #range2 {
+        background: none;
+    }
+    .values {
+        margin-top: 40px;
+    }
+    /* 自定義滑塊按鈕樣式 */
+    .form-range::-webkit-slider-thumb {
+        background: #0d6efd;
+        border: 2px solid white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+    .form-range::-moz-range-thumb {
+        background: #0d6efd;
+        border: 2px solid white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+	
+	/* 畫協線 */
+	.diagonal-strike {
+        position: relative;
+        display: inline-block;
+    }
+
+    .diagonal-strike::after {
+        content: '';
+        position: absolute;
+        top: 50%;  /* 控制线条的位置 */
+        right: 0;
+        width: 50%;
+        height: 2px;  /* 线条的厚度 */
+        background-color: red;  /* 线条的颜色 */
+        transform: rotate(-10deg);  /* 旋转45度 */
+        transform-origin: center;
+    }
+
+	
+  </style>
+</head>
+<body>
+  <div th:replace="~{client/common/header}"></div>
+
+  <main>
+    <div th:replace="~{client/booking/roomtype-search-input}"></div>
+    <section class="container-fluid max-width-1200px w-100 d-flex justify-content-center p-0">
+      <aside class="flex-column w-25 m-0 me-3">
+        <div class="mb-2">
+          <iframe class="w-100" src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d115608.42309165925!2d121.41562731702138!3d25.10987528831561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1z5om-5oi_5a2Q!5e0!3m2!1szh-TW!2stw!4v1728822044365!5m2!1szh-TW!2stw" height="130" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="d-flex align-items-center search-key-bgc border border-radius-22px mb-3 px-3">
+          <label for="searchKey" class="d-flex justify-content-center align-items-center ps-3 pe-2 search-key-bgc"><i class="bi bi-search fs-5 search-key-bgc"></i></label>
+          <input type="text" id="searchKey" class="form-control rounded search-key-bgc px-0 h-50px" placeholder="搜尋關鍵字">
+        </div>
+        <div class="mb-4">
+          <label for="customRange1" class="form-label fw-bolder small">每晚預算</label>
+          <div class="range-slider">
+            <input type="range" class="form-range" id="range1" min="0" max="12000" value="0">
+            <input type="range" class="form-range" id="range2" min="0" max="12000" value="12000">
+          </div>
+          <div class="d-flex mt-5">
+            <input class="form-control outline-1 rounded-0 w-100px h-25px p-1" type="text" placeholder="NT$ 0" readonly id="minValue">
+            <span class="border-0 border-bottom-dashed inline-block w-100 h-12d5px"></span>
+            <input class="form-control outline-1 rounded-0 w-100px h-25px ms-auto p-1" type="text" placeholder="NT$ 12000" readonly id="maxValue">
+          </div>
+        </div>
+
+        <div class="border rounded p-3 mb-4" id="filterCriteria">
+          <span class="fw-bolder small d-block mb-3">篩選條件</span>
+        </div>
+        
+        <!-- 分隔線 -->
+        <div class="border-bottom-gray-2 opacity-50 w-100 mb-1"></div>
+
+        <div class="py-3">
+          <span class="fw-bolder small d-block mb-3">服務設施篩選</span>
+          <div th:each="amenity : ${amenities}" class="form-check">
+            <input class="form-check-input" onclick="myApp.amenitiesHandler(event)" th:data-id="${amenity.amenityId}" th:data-name="${amenity.name}" type="checkbox" th:id="${'amenityCheckBox' + amenity.amenityId}">
+            <label class="form-check-label small" th:for="${'amenityCheckBox' + amenity.amenityId}" th:text="${amenity.name}"></label>
+          </div>
+        </div>
+
+        <!-- 分隔線 -->
+        <div class="border-bottom-gray-2 opacity-50 w-100 mb-1"></div>
+
+        <div class="py-3">
+          <span class="fw-bolder small d-block mb-3">評分篩選</span>
+          <div class="form-check">
+            <input class="form-check-input" onclick="myApp.scoresHandler(event)" type="checkbox" data-score="9.0" value="" id="score9.0">
+            <label class="form-check-label small" for="scoreNight">9.0 分</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" onclick="myApp.scoresHandler(event)" type="checkbox" data-score="8.0" value="" id="score8.0">
+            <label class="form-check-label small" for="scoreEight">8.0 分</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" onclick="myApp.scoresHandler(event)" type="checkbox" data-score="7.0" value="" id="score7.0">
+            <label class="form-check-label small" for="scoreSeven">7.0 分</label>
+          </div>
+        </div>
+      </aside>
+      
+      <div class="w-75 m-0">
+        <div class="m-0 d-flex border rounded px-0 text-center mb-3">
+          <div class="p-3 border-end flex-grow-1" style="background-color: rgb(248, 247, 249);">
+            <a href="#" class="text-dark-emphasis small link-underline link-underline-opacity-0">排序</a>
+          </div>
+          <div class="d-flex w-90" id="sortOptions">
+            <div class="p-3 flex-grow-1 border-end cursor-pointer customer-blue-active" data-attr="roomtypeId" data-sort="false">
+              <a href="#" class="text-dark-emphasis small">最佳匹配</a>
+            </div>
+            <div class="p-3 flex-grow-1 border-end cursor-pointer" data-attr="roomtypePrice" data-sort="false">
+              <a href="#" class="text-dark-emphasis small">最低價優先</a>
+            </div>
+            <div class="p-3 flex-grow-1 border-end cursor-pointer" data-attr="roomtypePrice" data-sort="true">
+              <a href="#" class="text-dark-emphasis small">最高價優先</a>
+            </div>
+            <div class="p-3 flex-grow-1 border-end cursor-pointer" data-attr="amenities" data-sort="true">
+              <a href="#" class="text-dark-emphasis small">最多服務優先</a>
+            </div>
+            <div class="p-3 flex-grow-1 cursor-pointer" data-attr="score" data-sort="true">
+              <a href="#" class="text-dark-emphasis small">最高評分優先</a>
+            </div>
+          </div>  
+        </div>
+        <div class="card-list" id="cardList">       
+          <div th:each="roomtype : ${roomtypes}" class="card card-bgc w-100 mb-3" th:data-id="${roomtype.roomtypeId}">
+              <div class="row g-0 h-100">
+                <div class="col-md-4 d-flex flex-column h-50">
+                    <img th:src="@{/management/roomtype/image/{id}(id=${roomtype.roomtypeId})}" class="w-100 img-fluid object-fit-cover rounded-start flex-grow-1 aspect-radio-5-4" alt="...">
+                    <div class="litte-img-group d-flex">
+                      <div class="col-md-3 p-0 border border-white"><img th:src="${'https://bookingdb.s3.ap-east-1.amazonaws.com/booking/roomtype' + roomtype.roomtypeId + '/room1'}" class="w-100 h-100 object-fit-cover" alt=""></div>
+                      <div class="col-md-3 p-0 border-top border-bottom border-white"><img th:src="${'https://bookingdb.s3.ap-east-1.amazonaws.com/booking/roomtype' + roomtype.roomtypeId + '/room2'}" class="w-100 h-100 object-fit-cover" alt=""></div>
+                      <div class="col-md-3 p-0 border border-white"><img th:src="${'https://bookingdb.s3.ap-east-1.amazonaws.com/booking/roomtype' + roomtype.roomtypeId + '/room3'}" class="w-100 h-100 object-fit-cover" alt=""></div>
+                      <div class="col-md-3 p-0 border-top border-bottom border-right border-white"><img th:src="${'https://bookingdb.s3.ap-east-1.amazonaws.com/booking/roomtype' + roomtype.roomtypeId + '/room4'}" class="w-100 h-100 object-fit-cover" alt=""></div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card-body d-flex flex-column h-100">
+                        <h4 class="card-title fw-bolder fs-5" th:text="${roomtype.roomtypeName}"></h4>
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-geo-alt-fill text-primary"></i>
+                          <span class="small mx-1 text-primary" th:text="${roomtype.roomtypeDistrict} + ','"></span>
+                          <span class="small mx-1 text-primary" th:text="${roomtype.roomtypeCity}"></span>	   
+                        </div>            
+                        <p class="card-text mb-0 small">這間住宿提供： </p>
+        
+                        <div class="d-flex flex-wrap">
+                            <span th:each="amenity : ${roomtype.amenities}" class="border px-2 small tag-color d-block me-2 mb-2 text-nowrap" th:text="${amenity.name}"></span>
+                        </div>
+						<small class="text-secondary mt-auto"><i class="bi bi-coin me-1"></i>現金回饋：[[${(roomtype.roomtypePrice - roomtype.roomtypePrice * 0.9).intValue() + '元'}]]</small>
+                    </div>
+                </div>
+                <div class="col-md-3 border-start">
+                    <div class="card-body d-flex flex-column h-100 text-end">
+                        <h5 class="card-title text-success fs-4" th:text="${roomtype.score + '超棒'}"></h5>
+                        <p class="card-text text-danger">超讚全館10%優惠</p>
+						<div class="d-flex flex-column mt-auto">
+							<span class="card-text fs-4 text-secondary diagonal-strike fw-bolder mt-1">NT$ [[${#numbers.formatInteger(roomtype.roomtypePrice/0.9, 0)}]]</span>
+							<small class="opacity-50 mt-1">現金回饋後的價錢</small>
+	                        <p class="card-text fs-3 fw-bolder mt-1">NT$ [[${roomtype.roomtypePrice}]]</p>
+						</div>
+                    </div>
+                </div>
+            </div>
+		  </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div th:replace="~{client/common/footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+<script th:inline="javascript">
+    let myApp = {};
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // 請求參數
+      let searchKeywords = [[${searchKeywords}]];
+      searchKeywords.amenities = [];
+      searchKeywords.scores = [];
+
+      let activeOption = document.querySelector('.customer-blue-active');
+      let filterCriteria = document.getElementById('filterCriteria');
+
+      document.getElementById('sortOptions').addEventListener('click', async e => {
+        let targetSort = e.target.closest('div');
+        let attrOrderBy = targetSort.dataset.attr;
+        let selectedSort = targetSort.dataset.sort;
+
+        activeOption.classList.remove('customer-blue-active');
+        targetSort.classList.add('customer-blue-active');
+
+        activeOption = targetSort;
+        
+        searchKeywords.pageNumber = 1;
+        searchKeywords.attrOrderBy = attrOrderBy;
+        searchKeywords.selectedSort = selectedSort;
+
+        let response = await fetch('/booking/client/api/roomtype', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(searchKeywords)
+        });
+
+        let data = await response.json();
+        let roomtypes = data.content;
+
+        cardList.innerHTML = '';
+        renderCardList(roomtypes);
+      });
+
+      const range1 = document.getElementById('range1');
+      const range2 = document.getElementById('range2');
+      const minValue = document.getElementById('minValue');
+      const maxValue = document.getElementById('maxValue');
+
+      function updateRange() {
+          if(parseInt(range1.value) > parseInt(range2.value)) {
+              let tmp = range1.value;
+              range1.value = range2.value;
+              range2.value = tmp;
+          }
+
+          minValue.value = 'NT$ ' + range1.value;
+          maxValue.value = 'NT$ ' + range2.value;
+      }
+
+      const rangeHandler = async e => {
+        // 去除掉NT$ 
+        searchKeywords.minMoney = minValue.value.substring(4);
+        searchKeywords.maxMoney = maxValue.value.substring(4);
+        searchKeywords.pageNumber = 1;
+
+        let response = await fetch('/booking/client/api/roomtype', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(searchKeywords)
+        });
+
+        let data = await response.json();
+        let roomtypes = data.content;
+
+        cardList.innerHTML = '';
+        renderCardList(roomtypes);
+      }
+
+      range1.addEventListener('change', rangeHandler);
+      range2.addEventListener('change', rangeHandler);
+      
+      range1.addEventListener('input', updateRange);
+      range2.addEventListener('input', updateRange);
+
+      document.querySelector('.card-list').addEventListener('click', function(e) {
+        let card = e.target.closest('.card');
+        let cardId = card.dataset.id;
+      	location.href = '/booking/room/detail?roomtypeId=' + cardId;
+      });
+
+      let footer = document.querySelector('footer');
+      let footerHeight = footer.clientHeight + parseInt(getComputedStyle(footer).marginTop);
+      
+
+      // 用來過濾URLSearchParams屬性值為null或undefined
+      myApp.createSearchParams = obj => {
+          const filteredEntries = Object.entries(obj).filter(([key, value]) => value !== null && value !== undefined);
+          return new URLSearchParams(filteredEntries);
+      }
+
+      let cardList = document.getElementById('cardList');
+
+      function renderCardList(roomtypes) {
+        roomtypes.forEach(roomtype => {
+          let card = `
+            <div class="card card-bgc w-100 mb-3" data-id="${roomtype.roomtypeId}">
+              <div class="row g-0 h-100">
+                <div class="col-md-4 d-flex flex-column">
+                    <img src="/booking/management/roomtype/image/${roomtype.roomtypeId}" class="w-100 flex-grow-1 img-fluid object-fit-cover rouned-start aspect-radio-5-4" alt="...">
+                    <div class="litte-img-group d-flex">
+                      <div class="col-md-3 p-0 border border-white"><img src="https://bookingdb.s3.ap-east-1.amazonaws.com/booking/roomtype${roomtype.roomtypeId}/room1" class="w-100 h-100 object-fit-cover" alt=""></div>
+                      <div class="col-md-3 p-0 border-top border-bottom border-white"><img src="https://bookingdb.s3.ap-east-1.amazonaws.com/booking/roomtype${roomtype.roomtypeId}/room2" class="w-100 h-100 object-fit-cover" alt=""></div>
+                      <div class="col-md-3 p-0 border border-white"><img src="https://bookingdb.s3.ap-east-1.amazonaws.com/booking/roomtype${roomtype.roomtypeId}/room3" class="w-100 h-100 object-fit-cover" alt=""></div>
+                      <div class="col-md-3 p-0 border-top border-bottom border-right border-white"><img src="https://bookingdb.s3.ap-east-1.amazonaws.com/booking/roomtype${roomtype.roomtypeId}/room4" class="w-100 h-100 object-fit-cover" alt=""></div>            
+                    </div> 
+                </div>
+                <div class="col-md-5">
+                    <div class="card-body d-flex flex-column h-100">
+                        <h4 class="card-title fw-bolder fs-5">${roomtype.roomtypeName}</h4>
+                        <div class="d-flex align-items-center">
+                          <i class="bi bi-geo-alt-fill text-primary"></i>
+                          <span class="small mx-1 text-primary">${roomtype.roomtypeDistrict},</span>
+                          <span class="small mx-1 text-primary">${roomtype.roomtypeCity}</span>	   
+                        </div>            
+                        <p class="card-text mb-0 small">這間住宿提供： </p>
+                        <div class="d-flex flex-wrap">
+                          ${roomtype.amenities.map(amenity => `<span class="tag border px-2 small tag-color d-block me-2 mb-2 text-nowrap">${amenity.name}</span>`).join('')}         
+                        </div>
+						<small class="text-secondary mt-auto"><i class="bi bi-coin me-1"></i>現金回饋：${Math.floor(roomtype.roomtypePrice * 11/10 - roomtype.roomtypePrice)}元</small>
+                    </div>
+                </div>
+                <div class="col-md-3 border-start">
+                    <div class="card-body d-flex flex-column h-100 text-end">
+                        <h5 class="card-title text-success fs-4">${roomtype.score.toFixed(1)}超棒</h5>
+                        <p class="card-text text-danger">超讚全館10%優惠</p>
+                        <div class="d-flex flex-column mt-auto">
+							<span class="card-text fs-4 text-secondary diagonal-strike fw-bolder mt-1">NT$ ${Math.floor(roomtype.roomtypePrice*11/10)}</span>
+							<small class="opacity-50 mt-1">現金回饋後的價錢</small>
+	                        <p class="card-text fs-3 fw-bolder mt-1">NT$ ${roomtype.roomtypePrice}</p>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          `;
+          cardList.innerHTML += card;
+        });
+
+      }
+
+      // amenity的checkbox點選響應事件
+      myApp.amenitiesHandler = async function(e) {
+        let checked = e.target.checked;
+        let name = e.target.dataset.name;
+        let amenityId = e.target.dataset.id;
+
+        searchKeywords.pageNumber = 1;
+
+        if(!checked) {
+
+          searchKeywords.amenities = searchKeywords.amenities.filter(amenity => amenity.amenityId !== amenityId);
+
+          let amenities =  [...filterCriteria.querySelectorAll('input[id^="amenity"]')];
+
+          let amenity = amenities.find(amenity => amenity.id === `amenity${amenityId}`);
+          amenity?.parentElement.remove();
+
+          document.getElementById(`amenityCheckBox${amenityId}`).checked = false;
+
+          let response = await fetch('/booking/client/api/roomtype', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(searchKeywords)
+          });
+
+          let data = await response.json();
+          let roomtypes = data.content;
+
+          cardList.innerHTML = '';
+          renderCardList(roomtypes);
+
+          return;
+        }
+
+        searchKeywords.amenities.push({
+          amenityId,
+          name
+        });
+
+
+        let checkbox = `
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" onclick="myApp.amenitiesHandler(event)" data-name=${name} data-id=${amenityId} value=${amenityId} id="amenity${amenityId}" checked>
+            <label class="form-check-label small" for="amenity${amenityId}">${name}</label>
+          </div>
+        `
+        
+        filterCriteria.innerHTML += checkbox;
+        
+        let response = await fetch('/booking/client/api/roomtype', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(searchKeywords)
+        });
+
+        let data = await response.json();
+        let roomtypes = data.content;
+
+        cardList.innerHTML = '';
+        renderCardList(roomtypes);
+      }
+
+      myApp.scoresHandler = async function(e) {
+        let checked = e.target.checked;
+        let score = e.target.dataset.score;
+        searchKeywords.pageNumber = 1;
+
+        if(!checked) {
+
+          searchKeywords.scores = searchKeywords.scores.filter(originalScore => originalScore != score);
+
+          let scores =  [...filterCriteria.querySelectorAll('input[data-score]')];
+
+          let findScore = scores.find(originalScore => originalScore.dataset.score === score);
+          findScore?.parentElement.remove();
+          console.log(`score${score}`);
+          document.getElementById(`score${score}`).checked = false;
+
+          let response = await fetch('/booking/client/api/roomtype', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(searchKeywords)
+          });
+
+          let data = await response.json();
+          let roomtypes = data.content;
+
+          cardList.innerHTML = '';
+          renderCardList(roomtypes);
+
+          return;
+        }
+
+        searchKeywords.scores.push(score);
+
+        let checkbox = `
+          <div class="form-check">
+            <input class="form-check-input" onclick="myApp.scoresHandler(event)" checked type="checkbox" data-score="${score}" value="${score}">
+            <label class="form-check-label small">${score} 分</label>
+          </div>
+        `;
+
+        filterCriteria.innerHTML += checkbox;
+
+        let response = await fetch('/booking/client/api/roomtype', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(searchKeywords)
+        });
+
+        let data = await response.json();
+        let roomtypes = data.content;
+
+        cardList.innerHTML = '';
+        renderCardList(roomtypes);
+      }
+
+      document.getElementById('searchKey').addEventListener('change', async e => {
+        let keywords = e.target.value;
+
+        searchKeywords.roomtypeName = keywords;
+        searchKeywords.pageNumber = 1;
+
+        let response = await fetch('/booking/client/api/roomtype', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(searchKeywords)
+        });
+
+        let data = await response.json();
+        let roomtypes = data.content;
+
+        cardList.innerHTML = '';
+
+        renderCardList(roomtypes);
+      });
+      
+      // 滾動卷軸觸發事件，用於往下顯示房型
+      const scrollHander = _.debounce(
+        async e => {
+          let htmlHeight = document.documentElement.clientHeight;
+          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+          const windowHeight = window.innerHeight;
+          const documentHeight = document.documentElement.scrollHeight;
+
+          if((windowHeight + scrollTop) <= (documentHeight - footerHeight)) {
+            // console.log('還未到達最下面');
+            return;   
+          }
+
+          searchKeywords.pageNumber++;
+          console.log(searchKeywords);
+          let response = await fetch('/booking/client/api/roomtype', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(searchKeywords)
+          });   
+
+          let data = await response.json();
+
+          let roomtypes = data.content;
+
+          // if(roomtypes.length === 0) { 會有問題，點擊checkbox之後再返回，事件就不見了
+          //   window.removeEventListener('scroll', scrollHander);
+          // }
+          
+          renderCardList(roomtypes);
+        }
+      , 100)
+
+      window.addEventListener('scroll', scrollHander);
+    });
+    
+</script>
+    
+</body>
+</html>

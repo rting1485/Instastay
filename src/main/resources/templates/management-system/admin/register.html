@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>管理員註冊</title>
+<style>
+* {
+	box-sizing: border-box;
+	text-decoration: none;
+}
+
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	font-family: Arial, sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(240, 240, 240);
+}
+
+.register-container {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border: 1px solid rgb(62, 62, 78);
+	text-align: center;
+	width: 360px;
+	margin: auto 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.register-container img.img {
+	width: 80px;
+}
+
+.register-container h2 {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.input-group {
+	margin-bottom: 15px;
+	text-align: left;
+}
+
+.input-group label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
+.input-group input {
+	font-size: 16px;
+	width: 320px !important;
+	border-radius: 5px;
+	border: 1px solid rgb(62, 62, 78);
+	padding: 10px;
+	outline-color: #007BFF;
+	padding-left: 14px;
+}
+
+.input-group input[type="text"], .input-group input[type="password"],
+	.input-group input[type="name"], .input-group input[type="email"],
+	.input-group input[type="date"] {
+	width: 100%;
+}
+
+.error-message {
+	color: red;
+	font-size: 12px;
+	text-align: center;
+	margin-top: 5px;
+}
+
+.register-button {
+	width: 100%;
+	padding: 10px;
+	color: rgb(62, 62, 78);
+	border: 1px solid rgb(62, 62, 78);
+	border-radius: 4px;
+	background-color: white;
+	font-size: 15px;
+	cursor: pointer;
+	margin-top: 10px;
+	transition: all .2s;
+}
+
+.register-button:hover {
+	background-color: rgb(62, 62, 78);
+	color: white;
+}
+
+.register-button:hover {
+	opacity: .8;
+}
+
+.register {
+	margin-top: 20px;
+	text-align: center;
+}
+
+.register a {
+	color: #007BFF;
+	text-decoration: none;
+	font-size: 14px;
+}
+
+.register a:hover {
+	text-decoration: underline;
+}
+
+.register-title {
+	display: flex;
+	text-align: start;
+	align-items: center;
+	width: 320px;
+}
+
+form {
+	width: 320px;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.input-group:last-of-type {
+	width: 320px;
+}
+
+select[name="admin-status"] {
+	padding: 5px 10px;
+}
+
+.go-login {
+	width: 100%;
+	padding: 10px;
+	background-color: rgb(62, 62, 78);
+	color: white;
+	border-radius: 4px;
+	font-size: 15px;
+	margin-top: 10px;
+	transition: all .2s;
+}
+
+.go-login:hover {
+	opacity: .8;
+}
+</style>
+</head>
+<body>
+	<div class="register-container">
+
+		<div class="register-title">
+			<img th:src="@{/management-system/common/image/instastay-logo.png}"
+				width="50" style="height: 50px; margin-right: 10px;">
+			<h2>管理員註冊</h2>
+		</div>
+		<form id="form" th:action="@{/management/admin/register}"
+			method="post">
+			<div class="input-group">
+				<label for="account"></label> <input type="text" id="account"
+					name="adminAccount" required placeholder="帳號"> <span
+					id="account-error" class="error-message"></span>
+			</div>
+			<div class="input-group">
+				<label for="password"></label> <input type="password" id="password"
+					name="adminPassword" required placeholder="密碼"> <span
+					id="password-error" class="error-message"></span>
+			</div>
+			<div class="input-group">
+				<label for="name"></label> <input type="text" id="name"
+					name="adminName" required placeholder="姓名"> <span
+					id="name-error" class="error-message"></span>
+			</div>
+			<div class="input-group">
+				<label for="mail"></label> <input type="text" id="name"
+					name="adminMail" required placeholder="電子郵件信箱"> <span
+					id="mail-error" class="error-message"></span>
+			</div>
+			<div class="input-group">
+				<label for="hiredate">到職日期</label> <input type="date" id="hiredate"
+					name="hiredate" value="today" required=""> <span
+					id="hiredate-error" class="error-message"></span>
+			</div>
+			<div class="input-group">
+				<label for="status">狀態</label> <select id="status"
+					name="adminStatus" required>
+					<option value="1" selected>在職</option>
+					<option value="0">離職</option>
+				</select> <span id="status-error" class="error-message"></span>
+			</div>
+			<!-- 提交按钮 -->
+			
+			<button type="submit" class="register-button">註冊</button>
+			<a class="go-login"
+				th:href="@{/management/admin/login}">我要登入</a>
+				<button type="button" id="typeDateButton" class="register-button">一鍵填寫</button>
+		</form>
+	</div>
+	<script src="https://kit.fontawesome.com/cc1b58587a.js"
+		crossorigin="anonymous"></script>
+	<script>
+		document.getElementById("form").addEventListener("submit",
+				function(event) {
+					// 檢查密碼是否符合規定
+					if (!checkPassword()) {
+						event.preventDefault(); // 阻止表單提交
+					}
+				});
+
+		document.getElementById("account").addEventListener("blur",
+				checkAccount);
+
+		function checkAccount() {
+			let theAccountObj = document.getElementById("account");
+			let theAccountObjVal = theAccountObj.value.trim();
+			let sp = document.getElementById("account-error");
+
+			if (theAccountObjVal === "") {
+				sp.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> 帳號欄位不可空白";
+			} else {
+				sp.innerHTML = ""; // 清除可能的錯誤訊息
+			}
+		}
+
+		document.getElementById("password").addEventListener("blur",
+				checkPassword);
+
+		function checkPassword() {
+			let thePwdObj = document.getElementById("password");
+			let thePwdObjVal = thePwdObj.value.trim();
+			let thePwdObjValLen = thePwdObjVal.length;
+			let spp = document.getElementById("password-error");
+
+			let flag1 = false, flag2 = false, flag3 = false;
+
+			if (thePwdObjVal === "") {
+				spp.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> 密碼不可空白";
+				return false;
+			} else if (thePwdObjValLen >= 8) {
+				for (let i = 0; i < thePwdObjValLen; i++) {
+					let ch = thePwdObjVal.charAt(i);
+					if (ch >= "A" && ch <= "Z") {
+						flag1 = true;
+					} else if (ch >= "a" && ch <= "z") {
+						flag2 = true;
+					} else if (ch >= "0" && ch <= "9") {
+						flag3 = true;
+					}
+					if (flag1 && flag2 && flag3)
+						break;
+				}
+				if (flag1 && flag2 && flag3) {
+					spp.innerHTML = "格式正確";
+					spp.style.color = "green";
+					return true; // 密碼格式正確
+				} else {
+					spp.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> 密碼格式錯誤";
+					return false; // 格式錯誤
+				}
+			} else {
+				spp.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> 密碼至少8個字";
+				return false; // 密碼太短
+			}
+		}
+
+		document.getElementById("name").addEventListener("blur", checkName);
+
+		function checkName() {
+			let theNameObj = document.getElementById("name");
+			let theNameObjVal = theNameObj.value.trim();
+			let sppp = document.getElementById("name-error");
+
+			if (theNameObjVal === "") {
+				sppp.innerHTML = "<i class='fa-solid fa-triangle-exclamation'></i> 名字欄位不可空白";
+			} else {
+				sppp.innerHTML = ""; // 清除可能的錯誤訊息
+			}
+		}
+		
+		
+		 // 一鍵填入
+       // Update the type data object with your values
+const typeData = {
+    adminAccount: "Admin22",
+    adminPassword: "Admin223",
+    adminName: "Jason",
+    adminMail: "tony2382@gmail.com",
+    hiredate: "2024-10-22",
+    adminStatus: "1" 
+};
+
+document.getElementById('typeDateButton').addEventListener('click', function() {
+    // Get all form fields
+    const accountField = document.getElementById("account");
+    const passwordField = document.getElementById("password");
+    const nameField = document.getElementById("name");
+    const mailField = document.getElementsByName("adminMail")[0];
+    const hiredateField = document.getElementById("hiredate");
+    const statusField = document.getElementById("status");
+
+    // Fill in the values
+    accountField.value = typeData.adminAccount;
+    passwordField.value = typeData.adminPassword;
+    nameField.value = typeData.adminName;
+    mailField.value = typeData.adminMail;
+    hiredateField.value = typeData.hiredate;
+    statusField.value = typeData.adminStatus;
+});
+
+	</script>
+</body>
+</html>
